@@ -1,5 +1,5 @@
 using ClothingStore.Api.Data;
-using ClothingStore.Api.Dtos;
+using ClothingStore.Api.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
