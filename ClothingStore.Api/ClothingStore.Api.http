@@ -1,0 +1,56 @@
+@baseUrl = http://localhost:5080
+@productId = 1
+@userId = 1
+@variantId = 1
+# После POST подставьте Id полученного резерва.
+@reservationId = 1
+
+### Список с пагинацией; проверьте X-Total-Count
+GET {{baseUrl}}/api/products?page=1&pageSize=5
+
+### Товар с вложенными связанными данными
+GET {{baseUrl}}/api/products/{{productId}}
+
+### Доступный и зарезервированный остаток
+GET {{baseUrl}}/api/product-variants/{{variantId}}
+
+### Резервирование (201)
+POST {{baseUrl}}/api/stock-reservations
+Content-Type: application/json
+
+{
+  "userId": {{userId}},
+  "variantId": {{variantId}},
+  "quantity": 2
+}
+
+### Недостаточный остаток (409)
+POST {{baseUrl}}/api/stock-reservations
+Content-Type: application/json
+
+{
+  "userId": {{userId}},
+  "variantId": {{variantId}},
+  "quantity": 2147483647
+}
+
+### Список резервов
+GET {{baseUrl}}/api/stock-reservations?page=1&pageSize=10
+
+### Изменение активного резерва и остатка (204)
+PATCH {{baseUrl}}/api/stock-reservations/{{reservationId}}
+Content-Type: application/json
+
+{ "quantity": 3 }
+
+### Отмена (200); повторная отмена возвращает 404
+POST {{baseUrl}}/api/stock-reservations/{{reservationId}}/cancel
+
+### История закрытого резерва
+GET {{baseUrl}}/api/stock-reservations/{{reservationId}}
+
+### Неверная пагинация (400)
+GET {{baseUrl}}/api/products?page=0&pageSize=10
+
+### Несуществующий товар (404)
+GET {{baseUrl}}/api/products/2147483647
